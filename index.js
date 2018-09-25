@@ -1,6 +1,7 @@
 const { Issuer } = require('openid-client');
 const express = require('express');
 const app = express();
+const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const crypto = require('crypto');
@@ -9,6 +10,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(session({ secret: 'thisisfortest', cookie: { maxAge: 60000000 }}));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 const TAMAIssuer = new Issuer({
   issuer: 'https://sso.tamacorp.co/oauth',
@@ -44,6 +47,10 @@ app.get("/assert", function(req, res) {
   }).catch(function(err) {
     res.send(err)
   });
+});
+
+app.get("/native", function(req, res) {
+  res.render("index",{});
 });
 
 app.listen(3000);

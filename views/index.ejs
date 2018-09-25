@@ -1,0 +1,46 @@
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script>
+  var config = {
+    client_id:"test",
+    redirect_uri:"http://localhost:3000/native",
+    authorization_endpoint:"https://sso.tamacorp.co/oauth/authorize",
+    token_endpoint:"https://sso.tamacorp.co/oauth/token"
+  }
+
+  $(function() {
+    var url_string = window.location.href
+    var url = new URL(url_string);
+    var code = url.searchParams.get("code");
+    if (code != null) {
+      tokenRequest(code);
+    }
+  });
+
+  function redirect() {
+    var redirect_uri = config.authorization_endpoint + "?client_id=" + config.client_id + "&redirect_uri=" + config.redirect_uri + "&state=12345&response_type=code";
+    window.location = redirect_uri;
+  }
+
+  function tokenRequest(code) {
+    $.post( config.token_endpoint , { client_id: config.client_id, grant_type: "authorization_code", code: code, redirect_uri: config.redirect_uri })
+    .done(function( data ) {
+      $("#token").text(JSON.stringify(data,null, 2));
+      //alert( "Data Loaded: " + data.access );
+    });
+  }
+
+</script>
+</head>
+
+<body>
+<pre id="token">
+</pre>
+<button onClick="redirect()" type="button" id="login">Login</button>
+</body>
+
+</html>
