@@ -9,7 +9,12 @@ const crypto = require('crypto');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(session({ secret: 'thisisfortest', cookie: { maxAge: 60000000 }}));
+app.use(session({ 
+    resave: true,
+    saveUninitialized: true, 
+    secret: 'thisisfortest', 
+    cookie: { maxAge: 60000000 }
+}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
